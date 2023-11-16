@@ -91,8 +91,12 @@ class CustomStopper(Stopper):
         # print(f"Iterations: {self._iterations}")
         # print(f"Counter: {self.counter}")
         # print(f'Results: {self.results}')
-        return self.stop_all()
+        return self.stop_all() or self.too_much_errors()
     
+    def too_much_errors(self):
+        errors_df = pd.read_csv(self.experiment_full_path + '/callback_errors.csv')
+        return len(errors_df) > 10
+        
     def stop_all(self):
         return self._iterations > self._min and self.counter > self._patience
 
