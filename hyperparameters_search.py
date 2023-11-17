@@ -95,8 +95,13 @@ class CustomStopper(Stopper):
     
     def too_much_errors(self):
         errors_path = self.experiment_full_path / 'callback_errors.csv'
-        errors_df = pd.read_csv(errors_path)
-        return len(errors_df) > 10
+        if os.path.exists(errors_path):
+            try:
+                errors_df = pd.read_csv(errors_path)
+                return len(errors_df) > 10
+            except pd.io.common.EmptyDataError:
+                return False
+        return False
         
     def stop_all(self):
         return self._iterations > self._min and self.counter > self._patience
