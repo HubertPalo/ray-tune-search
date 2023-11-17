@@ -99,7 +99,7 @@ class CustomStopper(Stopper):
             try:
                 errors_df = pd.read_csv(errors_path)
                 return len(errors_df) > 10
-            except pd.io.common.EmptyDataError:
+            except pd.errors.EmptyDataError:
                 return False
         return False
         
