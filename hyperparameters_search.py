@@ -98,7 +98,10 @@ class CustomStopper(Stopper):
         if os.path.exists(errors_path):
             try:
                 errors_df = pd.read_csv(errors_path)
-                return len(errors_df) > 10
+                if len(errors_df) > 10:
+                    print('TOO MUCH ERRORS - Stopping the experiment...')
+                    return True
+                return False
             except pd.errors.EmptyDataError:
                 return False
         return False
