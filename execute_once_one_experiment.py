@@ -52,7 +52,14 @@ def main(args):
         experiment_configuration=experiment_config,
         specific_name=args.experiment
     )
+    # Convert the score to float
     result['score'] = float(result['score'])
+    for key in result.keys():
+        try:
+            result[key] = float(result[key])
+        except Exception as error:
+            print(f"Error converting {key} to float")
+            print(error) 
     # Save the score in a file
     with open(f"execute_once_experiments/scores/{args.experiment}.yaml", "w") as f:
         yaml.dump(result, f)
