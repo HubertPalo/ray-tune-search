@@ -58,7 +58,7 @@ def main(args):
             dataset_locations=dataset_locations,
             save_folder=Path.absolute(Path(f'execute_once_experiments/{args.experiment}/results')),
             experiment_configuration=experiment_config,
-            specific_name=file
+            specific_name=file[:-5]
         )
         # Convert the score to float
         result['score'] = float(result['score'])
