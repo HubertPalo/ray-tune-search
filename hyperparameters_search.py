@@ -125,6 +125,13 @@ def my_objective_function(
                 item = int(item)
             property_to_modify = property_to_modify[item]
         property_to_modify[route[-1]] = value
+    # Quick fix for UMAP and properties min_dist and spread:
+    # min_dist must be less than or equal to spread
+    if 'reducer' in basic_experiment_configuration and basic_experiment_configuration['reducer']['name'] == 'umap':
+        basic_experiment_configuration['reducer']['kwargs']['min_dist'] = min(
+            basic_experiment_configuration['reducer']['kwargs']['min_dist'],
+            basic_experiment_configuration['reducer']['kwargs']['spread']
+        )
     # print('EXPERIMENT'*10, basic_experiment_configuration)
     config_to_execute = from_dict(data_class=ExecutionConfig, data=basic_experiment_configuration)
 
