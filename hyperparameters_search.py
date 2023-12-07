@@ -71,10 +71,7 @@ class CustomStopper(Stopper):
         self.best_found = 0
         self.counter = 0
         self.trial_ids = []
-        # print('CUSTOM STOPPER - init')
         self.experiment_full_path = experiment_full_path
-        # print('CUSTOM STOPPER - experiment_full_path', self.experiment_full_path)
-        # self.results = []
 
     def __call__(self, trial_id, result):
         print(f"CUSTOM STOPPER - Trial ids length: {len(self.trial_ids)} counter: {self.counter}")
@@ -153,19 +150,12 @@ def my_objective_function(
     session.report(result)
 
 
-# TO MODIFY: EXECUTE HYPERPARAMETERS SEARCH
 def hyperparameters_search(
-        # search_space, initial_params, dataset, experiment_name,
-        # max_concurrent=5, random_state=42,
         dataset_locations=None,
-        # resources={"cpu": 1, "gpu": 0},
         base_config=None,
-        exploration_config=None, experiment_full_path=None,
-        # time_budget=None,
+        exploration_config=None,
+        experiment_full_path=None,
         experiment_info=None):
-    
-
-
     # Set the random state
     set_random_state(experiment_info['random_state'])
     

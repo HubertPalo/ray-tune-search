@@ -11,14 +11,9 @@ import traceback
 
 
 def execute_once(dataset_locations, save_folder, experiment_configuration, specific_name=None):
-    # with open(f"experiments/{args.experiment}/base_config.yaml", "r") as f:
-    #     base_config = yaml.load(f, Loader=yaml.FullLoader)
     config_to_execute = from_dict(data_class=ExecutionConfig, data=experiment_configuration)
     try:
         result = h_search_unit(
-            # config=config,
-            # random_state=random_state,
-            # dataset=dataset,
             save_folder=save_folder,
             dataset_locations=dataset_locations,
             config_to_execute=config_to_execute,
@@ -27,8 +22,14 @@ def execute_once(dataset_locations, save_folder, experiment_configuration, speci
     except Exception as e:
         print('EXCEPTION FOUND\n', e)
         syserror = sys.exc_info()
-        # result = {'score': random.uniform(-20, -10)}
-        result = {'score': -0.1, 'num_params': -1, 'num_trainable_params': -1, 'error_type': str(syserror[0]), 'error_message': str(syserror[1]), 'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))}
+        result = {
+            'score': -0.1,
+            'num_params': -1,
+            'num_trainable_params': -1,
+            'error_type': str(syserror[0]),
+            'error_message': str(syserror[1]),
+            'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))
+        }
     return result
 
 def main(args):
@@ -48,8 +49,12 @@ def main(args):
     experiments_path = f'execute_once_experiments/{args.experiment}/configs'
     os.makedirs(f'execute_once_experiments/{args.experiment}/results', exist_ok=True)
     os.makedirs(f'execute_once_experiments/{args.experiment}/scores', exist_ok=True)
+    result_file_list = [file for file in os.listdir(f'execute_once_experiments/{args.experiment}/results')]
     # Read all files inside folder
     for file in os.listdir(experiments_path):
+        if file in result_file_list and args.skip_existing:
+            print(f"Skipping {file}")
+            continue
         # Read the config file
         with open(f"{experiments_path}/{file}", "r") as f:
             experiment_config = yaml.load(f, Loader=yaml.FullLoader)
@@ -105,6 +110,11 @@ if __name__=="__main__":
         help="Experiment name",
         type=str,
         required=True,
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip executions that were already run, that is, have something in the output path",
     )
 
     args = parser.parse_args()
