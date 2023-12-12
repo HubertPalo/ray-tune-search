@@ -1,0 +1,62 @@
+estimators:
+- algorithm: RandomForest
+  kwargs:
+    n_estimators: 100
+  name: randomforest-100
+  num_runs: 10
+- algorithm: KNN
+  kwargs:
+    n_neighbors: 5
+  name: KNN-5
+  num_runs: 1
+- algorithm: SVM
+  kwargs:
+    C: 1.0
+    kernel: rbf
+  name: SVM-rbf-C1.0
+  num_runs: 1
+extra:
+  in_use_features:
+  - accel-x
+  - accel-y
+  - accel-z
+  - gyro-x
+  - gyro-y
+  - gyro-z
+  reduce_on: all
+  report_reducer_weight: true
+  save_reducer: false
+  scale_on: train
+reducer:
+  algorithm: convtae1d
+  kwargs:
+    batch_size: 128
+    cuda_device_name: cuda:0
+    extra_properties:
+      down_HL: 0
+      kernel_size: 3
+      num_CL: 3
+      num_HL: 2
+      optimizer_lr: 4.860704814723429e-05
+      optimizer_weight_decay: 6.994656287259471e-06
+      size_CL: 19
+      size_HL: 150
+    file_to_load: execute_once_experiments/TV_best_ht_saving_checkpoints/files/TV_sb_gradual_convae_kuhar_25_epoch_203.pkl
+    latent_dim: 81
+    model_lambda: 0
+    model_name: ConvTAE_def
+    num_epochs: 20000
+    patience: 10
+    save_dir: execute_once_experiments/TV_best_ht_saving_checkpoints/files/
+    save_frequency: best
+    save_tag: TV_sb_gradual_convae_kuhar_25
+  name: AE
+  use_y: true
+reducer_dataset:
+- kuhar.standartized_balanced[train]
+test_dataset:
+- kuhar.standartized_balanced[validation]
+train_dataset:
+- kuhar.standartized_balanced[train]
+transforms: []
+version: '1.0'

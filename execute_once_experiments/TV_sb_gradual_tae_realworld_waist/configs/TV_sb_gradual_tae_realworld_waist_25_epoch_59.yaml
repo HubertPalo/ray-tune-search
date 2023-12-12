@@ -1,0 +1,62 @@
+estimators:
+- algorithm: RandomForest
+  kwargs:
+    n_estimators: 100
+  name: randomforest-100
+  num_runs: 10
+- algorithm: KNN
+  kwargs:
+    n_neighbors: 5
+  name: KNN-5
+  num_runs: 1
+- algorithm: SVM
+  kwargs:
+    C: 1.0
+    kernel: rbf
+  name: SVM-rbf-C1.0
+  num_runs: 1
+extra:
+  in_use_features:
+  - accel-x
+  - accel-y
+  - accel-z
+  - gyro-x
+  - gyro-y
+  - gyro-z
+  reduce_on: all
+  report_reducer_weight: true
+  save_reducer: false
+  scale_on: train
+reducer:
+  algorithm: convtae1d
+  kwargs:
+    batch_size: 64
+    cuda_device_name: cuda:0
+    extra_properties:
+      down_HL: 0
+      kernel_size: 5
+      num_CL: 0
+      num_HL: 2
+      optimizer_lr: 0.0008153483296003
+      optimizer_weight_decay: 6.516948347501204e-06
+      size_CL: 32
+      size_HL: 150
+    file_to_load: execute_once_experiments/TV_best_ht_saving_checkpoints/files/TV_sb_gradual_tae_realworld_waist_25_epoch_59.pkl
+    latent_dim: 53
+    model_lambda: 0.3934858831429563
+    model_name: ConvTAE_def
+    num_epochs: 20000
+    patience: 10
+    save_dir: execute_once_experiments/TV_best_ht_saving_checkpoints/files/
+    save_frequency: best
+    save_tag: TV_sb_gradual_tae_realworld_waist_25
+  name: AE
+  use_y: true
+reducer_dataset:
+- realworld_waist.standartized_balanced[train]
+test_dataset:
+- realworld_waist.standartized_balanced[validation]
+train_dataset:
+- realworld_waist.standartized_balanced[train]
+transforms: []
+version: '1.0'
