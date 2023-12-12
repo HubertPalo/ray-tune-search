@@ -98,7 +98,7 @@ models = ['ae', 'tae', 'convae', 'convtae']
 
 for model in tqdm(models, desc='Models'):
     for dataset in tqdm(datasets, desc='Datasets'):
-        files = [f'files/{file}' for file in os.listdir('files') if file.startswith(f'TV_sb_gradual_{model}_{dataset}_25')]
+        files = [file for file in os.listdir('files') if file.startswith(f'TV_sb_gradual_{model}_{dataset}_25')]
         template_file = f'configs/TV_sb_{model}_{dataset}_P25.yaml'
         with open(template_file) as file:
             original_template = yaml.load(file, Loader=yaml.FullLoader)
