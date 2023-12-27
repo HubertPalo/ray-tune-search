@@ -23,14 +23,34 @@ def main(args):
         dataset_locations_fullpath=dataset_locations_fullpath
     )
 
-    # Read the hyperparameters search config file
-    with open(f"experiments/{args.experiment}/exploration_config.yaml", "r") as f:
-        exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+    folders_to_check = [
+        Path(f"{args.experiment}"),
+        Path(f"experiments/{args.experiment}")
+    ]
+
+    for folder in folders_to_check:
+        print(f"Looking for files inside path {folder}...")
+        exploration_config_path = Path(f"{folder}/exploration_config.yaml")
+        base_config_path = Path(f"{folder}/base_config.yaml")
+        try:
+            # Read the hyperparameters search config file
+            with open(exploration_config_path, "r") as f:
+                exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+            with open(base_config_path, "r") as f:
+                base_config = yaml.load(f, Loader=yaml.FullLoader)
+            print(f"Files inside path {folder} found.")
+            experiment_full_path = Path.absolute(Path(f"{folder}"))
+            break
+        except:
+            exploration_config = None
+            base_config = None
+            print(f"Files inside path {args.experiment} not found...")
+
+    if exploration_config is None or base_config is None:
+        raise ValueError(f"No experiment files found. Exiting...")
+    print(experiment_full_path, exploration_config, base_config)
     
-    with open(f"experiments/{args.experiment}/base_config.yaml", "r") as f:
-        base_config = yaml.load(f, Loader=yaml.FullLoader)
-    
-    experiment_full_path = Path.absolute(Path(f"experiments/{args.experiment}"))
+    # experiment_full_path = Path.absolute(Path(f"experiments/{args.experiment}"))
 
     time_budget = args.time_budget
     if time_budget == -1:
@@ -61,14 +81,7 @@ def main(args):
     
     # Execute the hyperparameters search
     hyperparameters_search(
-        # search_space=search_space,
-        # initial_params=initial_params,
-        # dataset=args.dataset,
-        # experiment_name=experiment_name,
-        # max_concurrent=args.max_concurrent,
-        # random_state=args.random_state,
         dataset_locations=dataset_locations,
-        # resources=resources,
         base_config=base_config,
         exploration_config=exploration_config,
         experiment_full_path=experiment_full_path,
