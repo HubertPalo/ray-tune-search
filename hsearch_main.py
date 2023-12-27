@@ -48,11 +48,7 @@ def main(args):
 
     if exploration_config is None or base_config is None:
         raise ValueError(f"No experiment files found. Exiting...")
-    print(experiment_full_path, exploration_config, base_config)
-    assert 1==2
     
-    # experiment_full_path = Path.absolute(Path(f"experiments/{args.experiment}"))
-
     time_budget = args.time_budget
     if time_budget == -1:
         time_budget = None
