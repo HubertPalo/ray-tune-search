@@ -11,6 +11,7 @@ from librep.transforms.reshaper import SimpleReshaper
 from librep.transforms.spectrogram import Spectrogram
 from librep.transforms.stats import StatsTransform
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.decomposition import PCA
 
 # Third-party imports
 from umap import UMAP
@@ -166,6 +167,7 @@ estimator_cls = {
 reducers_cls = {
     "identity": Identity,
     "umap": UMAP,
+    "pca": PCA,
     "WrapperTransform": WrapperEstimatorTransform,
     "DebugReducer": DebugTransformEstimator,
     "dimal": DIMALDimensionalityReduction,
