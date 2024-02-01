@@ -8,13 +8,13 @@ import pandas as pd
 from basic.template import Template
 
 datasets = ['kuhar', 'motionsense', 'uci', 'wisdm', 'realworld_thigh', 'realworld_waist']
-percentages = [25, 50, 75, 100, 200]
+percentages = [2.5, 5, 25, 50, 75, 100, 200]
 models = ['ae', 'tae', 'convae', 'convtae', 'umap']
 # Create folder structure
-os.makedirs(f'../TVT_sb_best_found_2023', exist_ok=True)
-os.makedirs(f'../TVT_sb_best_found_2023/configs', exist_ok=True)
-os.makedirs(f'../TVT_sb_best_found_2023/results', exist_ok=True)
-os.makedirs(f'../TVT_sb_best_found_2023/scores', exist_ok=True)
+os.makedirs(f'../TVT_sb_best_found_2024', exist_ok=True)
+os.makedirs(f'../TVT_sb_best_found_2024/configs', exist_ok=True)
+os.makedirs(f'../TVT_sb_best_found_2024/results', exist_ok=True)
+os.makedirs(f'../TVT_sb_best_found_2024/scores', exist_ok=True)
 
 for model in tqdm(models, desc='Models'):
     template_file = f'TVT_template_{model}.yaml'
@@ -38,7 +38,7 @@ for model in tqdm(models, desc='Models'):
                 config_for_best_score = data[config_columns].iloc[data['score'].idxmax(), :]
                 template_updated = template_obj.update(model, config_for_best_score)
                 # Create the file
-                with open(f'../TVT_sb_best_found_2023/configs/TVT_sb_{model}_{dataset}_P{percentage}.yaml', 'w') as file:
+                with open(f'../TVT_sb_best_found_2024/configs/TVT_sb_{model}_{dataset}_P{percentage}.yaml', 'w') as file:
                     yaml.dump(template_updated, file)
             except Exception as e:
                 print(e)
