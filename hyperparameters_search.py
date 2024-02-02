@@ -157,7 +157,8 @@ def hyperparameters_search(
         experiment_full_path=None,
         experiment_info=None):
     # Set the random state
-    set_random_state(experiment_info['random_state'])
+    if experiment_info['random_state'] != -1:
+        set_random_state(experiment_info['random_state'])
     
     # Get the search space, initial params and experiment name from the config file
     search_space = {
