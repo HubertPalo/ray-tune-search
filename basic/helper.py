@@ -10,6 +10,7 @@ def set_random_state(random_state):
     """
     Set the random state for all the libraries used in the project.
     """
+    print(f"Setting random state to {random_state}")
     random.seed(random_state)
     np.random.seed(random_state)
     torch.manual_seed(random_state)
