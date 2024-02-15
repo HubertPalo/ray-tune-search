@@ -108,12 +108,21 @@ class CustomStopper(Stopper):
 
 def my_objective_function(
         config,
-        # random_state, dataset,
         save_folder, dataset_locations,
-        basic_experiment_configuration=None, search_space=None):
+        basic_experiment_configuration=None, search_space=None,
+        multichoice_info=[]):
     basic_experiment_configuration = deepcopy(basic_experiment_configuration)
     # Update the values for the current experiment
-    for key, value in config.items():
+    multichoice_keys = []
+    for key in [val for val in search_space if search_space[val]['tune_function'] == 'multichoice']:
+        # Get the values
+        array_values = []
+        for index, parameter in enumerate(search_space[key]['tune_parameters']):
+            multichoice_key = f"MC-{key}-{index}"
+            multichoice_keys.append(multichoice_key)
+            if config[multichoice_key] == 1:
+                array_values.append(parameter)
+        # Prepare the route
         route = search_space[key]['route'].split('/')
         property_to_modify = basic_experiment_configuration
         for key, item in enumerate(route[:-1]):
@@ -121,6 +130,20 @@ def my_objective_function(
             if item.isdigit():
                 item = int(item)
             property_to_modify = property_to_modify[item]
+        # Set the value (only arrays)
+        property_to_modify[route[-1]] = array_values
+
+    for key, value in config.items():
+        if key in multichoice_keys:
+            continue
+        route = search_space[key]['route'].split('/')
+        property_to_modify = basic_experiment_configuration
+        for key, item in enumerate(route[:-1]):
+            # If item is a number, then it is a list
+            if item.isdigit():
+                item = int(item)
+            property_to_modify = property_to_modify[item]
+        # Set the value (only one value, not an array)
         property_to_modify[route[-1]] = value
     # Quick fix for UMAP and properties min_dist and spread:
     # min_dist must be less than or equal to spread
@@ -161,10 +184,21 @@ def hyperparameters_search(
         set_random_state(experiment_info['random_state'])
     
     # Get the search space, initial params and experiment name from the config file
-    search_space = {
-        key: getattr(tune, value['tune_function'])(*value['tune_parameters'])
-        for key, value in exploration_config["search_space"].items()
-    }
+    search_space = {}
+    multichoice_info = []
+    for key, value in exploration_config["search_space"].items():
+        if value['tune_function'] == 'multichoice':
+            multichoice_info.append((key, value))
+            keys = [f"MC-{key}-{i}" for i in range(len(value['tune_parameters']))]
+            for k in keys:
+                search_space[k] = tune.choice([0,1])
+            continue
+        else:
+            search_space[key] = getattr(tune, value['tune_function'])(*value['tune_parameters'])
+    # search_space = {
+    #     key: getattr(tune, value['tune_function'])(*value['tune_parameters'])
+    #     for key, value in exploration_config["search_space"].items()
+    # }
     initial_params = exploration_config["initial_params"]
     
     resources = exploration_config["resources"]
@@ -192,7 +226,8 @@ def hyperparameters_search(
         save_folder=save_folder,
         dataset_locations=dataset_locations,
         basic_experiment_configuration=base_config,
-        search_space=exploration_config['search_space']
+        search_space=exploration_config['search_space'],
+        multichoice_info=multichoice_info
     )
     # Allocating the resources needed
     trainable = tune.with_resources(trainable=trainable, resources=resources)
