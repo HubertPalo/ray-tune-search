@@ -109,8 +109,8 @@ class CustomStopper(Stopper):
 def my_objective_function(
         config,
         save_folder, dataset_locations,
-        basic_experiment_configuration=None, search_space=None,
-        multichoice_info=[]):
+        basic_experiment_configuration=None, search_space=None):
+        # multichoice_info=[]):
     basic_experiment_configuration = deepcopy(basic_experiment_configuration)
     # Update the values for the current experiment
     multichoice_keys = []
@@ -185,10 +185,10 @@ def hyperparameters_search(
     
     # Get the search space, initial params and experiment name from the config file
     search_space = {}
-    multichoice_info = []
+    # multichoice_info = []
     for key, value in exploration_config["search_space"].items():
         if value['tune_function'] == 'multichoice':
-            multichoice_info.append((key, value))
+            # multichoice_info.append((key, value))
             keys = [f"MC-{key}-{i}" for i in range(len(value['tune_parameters']))]
             for k in keys:
                 search_space[k] = tune.choice([0,1])
@@ -226,8 +226,7 @@ def hyperparameters_search(
         save_folder=save_folder,
         dataset_locations=dataset_locations,
         basic_experiment_configuration=base_config,
-        search_space=exploration_config['search_space'],
-        multichoice_info=multichoice_info
+        search_space=exploration_config['search_space']
     )
     # Allocating the resources needed
     trainable = tune.with_resources(trainable=trainable, resources=resources)
