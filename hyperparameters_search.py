@@ -117,8 +117,8 @@ def my_objective_function(
     for key in [val for val in search_space if search_space[val]['tune_function'] == 'multichoice']:
         # Get the values
         array_values = []
-        for index, parameter in enumerate(search_space[key]['tune_parameters']):
-            multichoice_key = f"MC-{key}-{index}"
+        for parameter in search_space[key]['tune_parameters']:
+            multichoice_key = f"MC-{key}-{parameter}"
             multichoice_keys.append(multichoice_key)
             if config[multichoice_key] == 1:
                 array_values.append(parameter)
@@ -189,7 +189,7 @@ def hyperparameters_search(
     for key, value in exploration_config["search_space"].items():
         if value['tune_function'] == 'multichoice':
             # multichoice_info.append((key, value))
-            keys = [f"MC-{key}-{i}" for i in range(len(value['tune_parameters']))]
+            keys = [f"MC-{key}-{i}" for i in value['tune_parameters']]
             for k in keys:
                 search_space[k] = tune.choice([0,1])
             continue
