@@ -74,6 +74,7 @@ class ExtraConfig:
     scale_on: str  # valid values: self, train
     save_reducer: bool = False
     report_reducer_weight: bool = False
+    report_pydrmetrics: bool = False
 
 
 @dataclass

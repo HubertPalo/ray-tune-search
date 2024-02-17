@@ -2,6 +2,7 @@
 import time
 from dataclasses import asdict
 from typing import Any, Dict, List
+from copy import deepcopy
 
 # from config import ExecutionConfig
 from basic.config import *
@@ -13,6 +14,7 @@ warnings.filterwarnings("ignore", message=".*The 'nopython' keyword.*")
 # Librep imports
 from librep.config.type_definitions import PathLike
 from librep.metrics.report import ClassificationReport
+from librep.metrics.dimred_evaluator import DimensionalityReductionQualityReport
 from librep.utils.workflow import MultiRunWorkflow, SimpleTrainEvalWorkflow
 from basic.utils import catchtime, load_yaml, get_sys_info
 
@@ -142,6 +144,9 @@ def run_basic_experiment(
                 keep_suffixes=True,
             )
     additional_info["transform_time"] = float(transform_time)
+
+    # ----------- EXTRA - Save the original data representation ------------
+    original_test_representation = deepcopy(datasets["test_dataset"])
     
     # ----------- 3. Do the parametric transform on train and test, using the reducer dataset to fit the transform ------------
 
@@ -190,6 +195,13 @@ def run_basic_experiment(
         )
         for estimator_cfg in config_to_execute.estimators
     ]
+
+    # ----------- 6. Experimental, examine the representation ------------
+    if config_to_execute.extra.report_pydrmetrics:
+        pydrm_reporter = DimensionalityReductionQualityReport()
+        projected_test_representation = datasets['test_dataset']
+        pydrm_report = pydrm_reporter.evaluate([original_test_representation, projected_test_representation])
+        additional_info["pydrm_report"] = pydrm_report
 
     # Add some meta information
     end_time = time.time()
