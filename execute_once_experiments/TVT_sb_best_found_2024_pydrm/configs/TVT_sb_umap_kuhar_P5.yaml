@@ -25,30 +25,18 @@ extra:
   - gyro-z
   reduce_on: all
   report_pydrmetrics: true
-  report_reducer_weight: true
   save_reducer: false
   scale_on: train
 reducer:
-  algorithm: convtae1d
+  algorithm: umap
   kwargs:
-    batch_size: 64
-    cuda_device_name: cuda:0
-    extra_properties:
-      down_HL: 0
-      kernel_size: 5
-      num_CL: 0
-      num_HL: 3
-      optimizer_lr: 0.0001589330759546
-      optimizer_weight_decay: 6.367138124434422e-06
-      size_CL: 32
-      size_HL: 150
-    latent_dim: 9
-    model_lambda: 0
-    model_name: ConvTAE_def
-    num_epochs: 20000
-    patience: 10
-  name: AE
-  use_y: true
+    min_dist: 0.0004552869284027
+    n_components: 18
+    n_epochs: 189
+    n_neighbors: 5
+    random_state: 42
+    spread: 1.2205261383380388
+  name: umap
 reducer_dataset:
 - kuhar.standartized_balanced[train]
 - kuhar.standartized_balanced[validation]

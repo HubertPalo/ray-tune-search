@@ -1,0 +1,49 @@
+estimators:
+- algorithm: RandomForest
+  kwargs:
+    n_estimators: 100
+  name: randomforest-100
+  num_runs: 10
+- algorithm: KNN
+  kwargs:
+    n_neighbors: 5
+  name: KNN-5
+  num_runs: 1
+- algorithm: SVM
+  kwargs:
+    C: 1.0
+    kernel: rbf
+  name: SVM-rbf-C1.0
+  num_runs: 1
+extra:
+  in_use_features:
+  - accel-x
+  - accel-y
+  - accel-z
+  - gyro-x
+  - gyro-y
+  - gyro-z
+  reduce_on: all
+  report_pydrmetrics: true
+  save_reducer: false
+  scale_on: train
+reducer:
+  algorithm: umap
+  kwargs:
+    min_dist: 1.4872257803598623
+    n_components: 244
+    n_epochs: 541
+    n_neighbors: 4
+    random_state: 42
+    spread: 1.5022640554750084
+  name: umap
+reducer_dataset:
+- motionsense.standartized_balanced[train]
+- motionsense.standartized_balanced[validation]
+test_dataset:
+- motionsense.standartized_balanced[test]
+train_dataset:
+- motionsense.standartized_balanced[train]
+- motionsense.standartized_balanced[validation]
+transforms: []
+version: '1.0'

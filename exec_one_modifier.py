@@ -14,6 +14,9 @@ class ConfigEditor:
     def pca_dim_setter(self):
         index_file = self.filename.split(".")[0]
         self.config['reducer']['kwargs']['n_components'] = int(index_file)
+
+    def add_pydrmetrics(self):
+        self.config['extra']['report_pydrmetrics'] = True
     
     def execute_function(self, func_name):
         if hasattr(self, func_name) and callable(function_to_call := getattr(self, func_name)):
