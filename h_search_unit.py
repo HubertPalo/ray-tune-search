@@ -9,7 +9,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 # Third-party imports
 from basic.config import *
 from basic.run_basic_experiment import run_basic_experiment
-from basic.helper import process_result
+from basic.helper import process_result, process_result_topology
 
 
 def h_search_unit(
@@ -35,6 +35,7 @@ def h_search_unit(
             yaml.dump(experiment_result, f)
     # Return the score
     processed_result = process_result(experiment_result)
+    topology_result = experiment_result['additional']['pydrm_report'] if 'pydrm_report' in experiment_result['additional'] else None
     # Get the maximum accuracy between all the estimators
     max_accuracy = processed_result[-1]['accuracy']
     result_object = {'score': max_accuracy}
@@ -52,5 +53,7 @@ def h_search_unit(
     if 'num_trainable_params' in experiment_result['additional']:
         result_object['num_trainable_params'] = experiment_result['additional']['num_trainable_params']
         # num_trainable_params = experiment_result['additional']['num_trainable_params']
+    if topology_result:
+        result_object.update(topology_result)
     # return {'score': max_accuracy, 'num_params': num_params, 'num_trainable_params': num_trainable_params}
     return result_object
