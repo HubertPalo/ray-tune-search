@@ -21,7 +21,7 @@ from pathlib import Path
 import functools
 import sys
 import traceback
-
+from hs_objective_function import default_objective_function
 
 class BestResultCallback(Callback):
 
@@ -106,71 +106,71 @@ class CustomStopper(Stopper):
     def stop_all(self):
         return self._iterations > self._min and self.counter > self._patience
 
-def my_objective_function(
-        config,
-        save_folder, dataset_locations,
-        basic_experiment_configuration=None, search_space=None):
-        # multichoice_info=[]):
-    basic_experiment_configuration = deepcopy(basic_experiment_configuration)
-    # Update the values for the current experiment
-    multichoice_keys = []
-    for key in [val for val in search_space if search_space[val]['tune_function'] == 'multichoice']:
-        # Get the values
-        array_values = []
-        for parameter in search_space[key]['tune_parameters']:
-            multichoice_key = f"MC-{key}-{parameter}"
-            multichoice_keys.append(multichoice_key)
-            if config[multichoice_key] == 1:
-                array_values.append(parameter)
-        # Prepare the route
-        route = search_space[key]['route'].split('/')
-        property_to_modify = basic_experiment_configuration
-        for key, item in enumerate(route[:-1]):
-            # If item is a number, then it is a list
-            if item.isdigit():
-                item = int(item)
-            property_to_modify = property_to_modify[item]
-        # Set the value (only arrays)
-        property_to_modify[route[-1]] = array_values
+# def my_objective_function(
+#         config,
+#         save_folder, dataset_locations,
+#         basic_experiment_configuration=None, search_space=None):
+#         # multichoice_info=[]):
+#     basic_experiment_configuration = deepcopy(basic_experiment_configuration)
+#     # Update the values for the current experiment
+#     multichoice_keys = []
+#     for key in [val for val in search_space if search_space[val]['tune_function'] == 'multichoice']:
+#         # Get the values
+#         array_values = []
+#         for parameter in search_space[key]['tune_parameters']:
+#             multichoice_key = f"MC-{key}-{parameter}"
+#             multichoice_keys.append(multichoice_key)
+#             if config[multichoice_key] == 1:
+#                 array_values.append(parameter)
+#         # Prepare the route
+#         route = search_space[key]['route'].split('/')
+#         property_to_modify = basic_experiment_configuration
+#         for key, item in enumerate(route[:-1]):
+#             # If item is a number, then it is a list
+#             if item.isdigit():
+#                 item = int(item)
+#             property_to_modify = property_to_modify[item]
+#         # Set the value (only arrays)
+#         property_to_modify[route[-1]] = array_values
 
-    for key, value in config.items():
-        if key in multichoice_keys:
-            continue
-        route = search_space[key]['route'].split('/')
-        property_to_modify = basic_experiment_configuration
-        for key, item in enumerate(route[:-1]):
-            # If item is a number, then it is a list
-            if item.isdigit():
-                item = int(item)
-            property_to_modify = property_to_modify[item]
-        # Set the value (only one value, not an array)
-        property_to_modify[route[-1]] = value
-    # Quick fix for UMAP and properties min_dist and spread:
-    # min_dist must be less than or equal to spread
-    # if 'reducer' in basic_experiment_configuration and basic_experiment_configuration['reducer']['name'] == 'umap':
-    #     basic_experiment_configuration['reducer']['kwargs']['min_dist'] = min(
-    #         basic_experiment_configuration['reducer']['kwargs']['min_dist'],
-    #         basic_experiment_configuration['reducer']['kwargs']['spread']
-    #     )
-    # print('EXPERIMENT'*10, basic_experiment_configuration)
-    config_to_execute = from_dict(data_class=ExecutionConfig, data=basic_experiment_configuration)
+#     for key, value in config.items():
+#         if key in multichoice_keys:
+#             continue
+#         route = search_space[key]['route'].split('/')
+#         property_to_modify = basic_experiment_configuration
+#         for key, item in enumerate(route[:-1]):
+#             # If item is a number, then it is a list
+#             if item.isdigit():
+#                 item = int(item)
+#             property_to_modify = property_to_modify[item]
+#         # Set the value (only one value, not an array)
+#         property_to_modify[route[-1]] = value
+#     # Quick fix for UMAP and properties min_dist and spread:
+#     # min_dist must be less than or equal to spread
+#     # if 'reducer' in basic_experiment_configuration and basic_experiment_configuration['reducer']['name'] == 'umap':
+#     #     basic_experiment_configuration['reducer']['kwargs']['min_dist'] = min(
+#     #         basic_experiment_configuration['reducer']['kwargs']['min_dist'],
+#     #         basic_experiment_configuration['reducer']['kwargs']['spread']
+#     #     )
+#     # print('EXPERIMENT'*10, basic_experiment_configuration)
+#     config_to_execute = from_dict(data_class=ExecutionConfig, data=basic_experiment_configuration)
 
-    try:
-        result = h_search_unit(
-            # config=config,
-            # random_state=random_state,
-            # dataset=dataset,
-            save_folder=save_folder,
-            dataset_locations=dataset_locations,
-            config_to_execute=config_to_execute
-        )
-    except Exception as e:
-        print('EXCEPTION FOUND\n', e)
-        syserror = sys.exc_info()
-        # result = {'score': random.uniform(-20, -10)}
-        result = {'score': -0.1, 'num_params': -1, 'num_trainable_params': -1, 'error_type': str(syserror[0]), 'error_message': str(syserror[1]), 'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))}
-        # print(result)
-    session.report(result)
+#     try:
+#         result = h_search_unit(
+#             # config=config,
+#             # random_state=random_state,
+#             # dataset=dataset,
+#             save_folder=save_folder,
+#             dataset_locations=dataset_locations,
+#             config_to_execute=config_to_execute
+#         )
+#     except Exception as e:
+#         print('EXCEPTION FOUND\n', e)
+#         syserror = sys.exc_info()
+#         # result = {'score': random.uniform(-20, -10)}
+#         result = {'score': -0.1, 'num_params': -1, 'num_trainable_params': -1, 'error_type': str(syserror[0]), 'error_message': str(syserror[1]), 'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))}
+#         # print(result)
+#     session.report(result)
 
 
 def hyperparameters_search(
@@ -219,7 +219,7 @@ def hyperparameters_search(
     hyperopt = ConcurrencyLimiter(hyperopt, max_concurrent=experiment_info['max_concurrent'])
 
     # Initializing the trainable
-    trainable = my_objective_function
+    trainable = default_objective_function
     # Setting the parameters for the function
     trainable = tune.with_parameters(
         trainable,
