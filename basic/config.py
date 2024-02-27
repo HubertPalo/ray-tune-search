@@ -19,6 +19,7 @@ from librep.transforms.dimal import DIMALDimensionalityReduction
 from librep.transforms.topo_ae import ConvTAETransform
 from librep.transforms.lstm import LSTMTrainer
 from librep.transforms.convaelstm import ConvAELSTMTransform
+from librep.transforms.topo_ae_remade import TopologicalDimensionalityReductionRemade
 
 ################################################################################
 # Configuration classes
@@ -174,7 +175,8 @@ reducers_cls = {
     "dimal": DIMALDimensionalityReduction,
     "convtae1d": ConvTAETransform,
     "lstm": LSTMTrainer,
-    "convaelstm": ConvAELSTMTransform
+    "convaelstm": ConvAELSTMTransform,
+    'convtae1dremade': TopologicalDimensionalityReductionRemade
 }
 # Dictionary with the valid transforms keys to use in experiment configuration
 # (under transform.transform key).
