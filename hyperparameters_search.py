@@ -16,12 +16,9 @@ import random
 from ray.tune.stopper import Stopper
 import numpy as np
 import pandas as pd
-import ray
 from pathlib import Path
 import functools
-import sys
-import traceback
-from hs_objective_function import default_objective_function
+from hs_objective_function import default_objective_function, new_objective_function
 
 class BestResultCallback(Callback):
 
@@ -219,14 +216,19 @@ def hyperparameters_search(
     hyperopt = ConcurrencyLimiter(hyperopt, max_concurrent=experiment_info['max_concurrent'])
 
     # Initializing the trainable
-    trainable = default_objective_function
+    trainables = {
+        'default': default_objective_function,
+        'new': new_objective_function
+    }
+    trainable = trainables[experiment_info['objective_function']]
+
     # Setting the parameters for the function
     trainable = tune.with_parameters(
         trainable,
         save_folder=save_folder,
         dataset_locations=dataset_locations,
         basic_experiment_configuration=base_config,
-        search_space=exploration_config['search_space']
+        exploration_configuration=exploration_config
     )
     # Allocating the resources needed
     trainable = tune.with_resources(trainable=trainable, resources=resources)

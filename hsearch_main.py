@@ -71,7 +71,8 @@ def main(args):
         'random_state': args.random_state,
         'time_budget': time_budget,
         'restore': args.restore,
-        'save_experiment': args.save_experiment
+        'save_experiment': args.save_experiment,
+        'objective_function': args.objective_function,
         # 'type_stopper': 
         # 'stopper_custom': args.stopper_custom
     }
@@ -165,6 +166,13 @@ if __name__=="__main__":
         "--save_experiment",
         help="Save experiment files",
         action="store_true",
+    )
+    parser.add_argument(
+        "--objective_function",
+        default="default",
+        help="Objective function to use for the hyperparameters search: [default, new]",
+        type=str,
+        required=False,
     )
     # parser.add_argument(
     #     "--experiment_name",

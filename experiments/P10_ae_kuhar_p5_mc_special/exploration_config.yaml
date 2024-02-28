@@ -1,0 +1,42 @@
+additional_info:
+  kuhar: 0.67
+  motionsense: 0.79
+  uci: 0.85
+  wisdm: 0.75
+  realworld_thigh: 0.67
+  realworld_waist: 0.79
+resources:
+  gpu: 0.25
+  cpu: 1.0
+search_space:
+  batch_size:
+    tune_function: choice
+    tune_parameters: [[64, 128]]
+    route: reducer/kwargs/batch_size
+  num_HL:
+    tune_function: randint
+    tune_parameters: [2, 9]
+    route: reducer/kwargs/extra_properties/num_HL
+  latent_dim:
+    tune_function: randint
+    tune_parameters: [2, 19]
+    route: reducer/kwargs/latent_dim
+  # opt_lr:
+  #   tune_function: loguniform
+  #   tune_parameters: [0.00001, 0.001]
+  #   route: reducer/kwargs/extra_properties/optimizer_lr
+  # opt_wd:
+  #   tune_function: uniform
+  #   tune_parameters: [0, 0.00001]
+  #   route: reducer/kwargs/extra_properties/optimizer_weight_decay
+  red_dataset:
+    tune_function: multichoice
+    tune_parameters:
+    - kuhar.standartized_balanced[train]
+    - motionsense.standartized_balanced[train]
+    - uci.standartized_balanced[train]
+    - wisdm.standartized_balanced[train]
+    - realworld_thigh.standartized_balanced[train]
+    - realworld_waist.standartized_balanced[train]
+    route: reducer_dataset
+initial_params:
