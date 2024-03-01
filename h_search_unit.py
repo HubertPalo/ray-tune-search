@@ -71,7 +71,7 @@ def h_search_unit(
     # Defining the result object
     result_object = dict()
     # Processing the report
-    max_report, report = process_function(experiment_result)
+    max_report, report = process_function(experiment_result['report'])
     # General Report
     result_object.update(report)
     # Topology Report

@@ -44,9 +44,9 @@ def process_report(report, metrics=["accuracy", "f1 score (macro)", "f1 score (w
         report_dict[f"{metric} (std)"] = np.std(all_runs)
     return report_dict
 
-def process_result_default(result):
+def process_result_default(report_result):
     to_report = dict()
-    estimator_results = [process_report(report) for report in result['report']]
+    estimator_results = [process_report(report) for report in report_result]
     max_report = {
         'max': np.max([result["accuracy (mean)"] for result in estimator_results])
     }
@@ -58,11 +58,11 @@ def process_result_default(result):
     
     return max_report, to_report
 
-def process_result_custom(result):
+def process_result_custom(report_result):
     to_report = dict()
     max_report = dict()
-    for dataset_name in result['report'].keys():
-        m_report, d_report = process_result_default(result['report'][dataset_name])
+    for dataset_name in report_result.keys():
+        m_report, d_report = process_result_default(report_result[dataset_name])
         for key in d_report.keys():
             to_report[f"{dataset_name}-{key}"] = d_report[key]
         max_report[dataset_name] = m_report['max']
