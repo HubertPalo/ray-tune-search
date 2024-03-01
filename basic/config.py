@@ -76,10 +76,18 @@ class ExtraConfig:
     save_reducer: bool = False
     report_reducer_weight: bool = False
     report_pydrmetrics: bool = False
+    # experiment_type: str = "default"
 
+@dataclass
+class MetaConfig:
+    experiment_type: str = "default" # "test_isolated"
+    # baseline_comparison: bool = False # If True, compare the results with the baseline
+    # baseline_improvement_rule: str = "mean" # valid values: mean, min, max
 
 @dataclass
 class ExecutionConfig:
+    # Meta information
+    metadata: MetaConfig
     # control variables
     version: str
     # Datasets to use

@@ -1,11 +1,8 @@
 from hyperparameters_search import hyperparameters_search
-from ray import tune
 import argparse
 from basic.helper import get_dataset_locations
 from pathlib import Path
 import yaml
-from dacite import from_dict
-from basic.config import ExecutionConfig
 import os
 
 
@@ -49,9 +46,10 @@ def main(args):
     if exploration_config is None or base_config is None:
         raise ValueError(f"No experiment files found. Exiting...")
     
-    time_budget = args.time_budget
-    if time_budget == -1:
-        time_budget = None
+    time_budget = args.time_budget if args.time_budget != -1 else None
+    # time_budget = args.time_budget
+    # if time_budget == -1:
+    #     time_budget = None
     
     cpu = args.cpu
     if cpu != -1:
@@ -60,11 +58,8 @@ def main(args):
     if gpu != -1:
         exploration_config['resources']['gpu'] = gpu
     
-
-    
     # ESTABLECER EL CODIGO PARA EL TIPO DE STOPPER
     # DETECTAR TIPO DE STOPPER Y MANDAR
-
 
     experiment_info = {
         'max_concurrent': args.max_concurrent,
@@ -72,9 +67,7 @@ def main(args):
         'time_budget': time_budget,
         'restore': args.restore,
         'save_experiment': args.save_experiment,
-        'objective_function': args.objective_function,
-        # 'type_stopper': 
-        # 'stopper_custom': args.stopper_custom
+        'baseline_gain': args.baseline_gain,
     }
     
     # Execute the hyperparameters search
@@ -83,7 +76,6 @@ def main(args):
         base_config=base_config,
         exploration_config=exploration_config,
         experiment_full_path=experiment_full_path,
-        # time_budget=time_budget,
         experiment_info=experiment_info
     )
 
@@ -168,9 +160,9 @@ if __name__=="__main__":
         action="store_true",
     )
     parser.add_argument(
-        "--objective_function",
-        default="default",
-        help="Objective function to use for the hyperparameters search: [default, new]",
+        "--baseline_gain",
+        default="none",
+        help="Baseline gain: [none, min, mean]",
         type=str,
         required=False,
     )

@@ -216,19 +216,25 @@ def hyperparameters_search(
     hyperopt = ConcurrencyLimiter(hyperopt, max_concurrent=experiment_info['max_concurrent'])
 
     # Initializing the trainable
-    trainables = {
-        'default': default_objective_function,
-        'new': new_objective_function
-    }
-    trainable = trainables[experiment_info['objective_function']]
+    # trainables = {
+    #     'default': default_objective_function,
+    #     'new': new_objective_function
+    # }
+    # trainable = trainables[experiment_info['objective_function']]
+    trainable = default_objective_function
 
+    baseline_gain = experiment_info['baseline_gain']
+    additional_info = {'BASELINE-GAIN': baseline_gain}
+    additional_info.update(exploration_config['additional_info'] if 'additional_info' in exploration_config else {})
+    
     # Setting the parameters for the function
     trainable = tune.with_parameters(
         trainable,
         save_folder=save_folder,
         dataset_locations=dataset_locations,
         basic_experiment_configuration=base_config,
-        exploration_configuration=exploration_config
+        exploration_configuration=exploration_config,
+        additional_info=additional_info
     )
     # Allocating the resources needed
     trainable = tune.with_resources(trainable=trainable, resources=resources)

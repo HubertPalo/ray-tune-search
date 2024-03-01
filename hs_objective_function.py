@@ -13,7 +13,8 @@ def default_objective_function(
     save_folder,
     dataset_locations,
     basic_experiment_configuration=None,
-    exploration_configuration=None):
+    exploration_configuration=None,
+    additional_info={}):
     basic_experiment_config = deepcopy(basic_experiment_configuration)
     # Update the values for the current experiment
     search_space = exploration_configuration['search_space']
@@ -44,7 +45,9 @@ def default_objective_function(
         result = h_search_unit(
             save_folder=save_folder,
             dataset_locations=dataset_locations,
-            config_to_execute=config_to_execute
+            config_to_execute=config_to_execute,
+            # experiment_type= exploration_configuration['experiment_type'] if 'experiment_type' in exploration_configuration else 'default',
+            additional_info=additional_info
         )
     except Exception as e:
         print('EXCEPTION FOUND\n', e)
@@ -88,36 +91,35 @@ def new_objective_function(
         # Set the value
         property_to_modify[route[-1]] = property_content
     # For each dataset
-    scores = []
-    result_compilation = {}
-    for dataset in ['kuhar', 'motionsense', 'realworld_thigh', 'realworld_waist', 'uci', 'wisdm']:
-        copy_config = deepcopy(basic_experiment_config)
-        copy_config['test_dataset'] = [f'{dataset}.standartized_balanced[validation]']
-        copy_config['train_dataset'] = [f'{dataset}.standartized_balanced[train]']
-        config_to_execute = from_dict(
-            data_class=ExecutionConfig,
-            data=copy_config
+    # scores = []
+    # result_compilation = {}
+    
+    config_to_execute = from_dict(
+        data_class=ExecutionConfig,
+        data=basic_experiment_config
+    )    
+    try:
+        result = h_search_unit(
+            save_folder=save_folder,
+            dataset_locations=dataset_locations,
+            config_to_execute=config_to_execute,
+            experiment_type='custom',
+            extra_info=exploration_configuration['additional_info']
         )
-        try:
-            result = h_search_unit(
-                save_folder=save_folder,
-                dataset_locations=dataset_locations,
-                config_to_execute=config_to_execute
-            )
-        except Exception as e:
-            print('EXCEPTION FOUND\n', e)
-            syserror = sys.exc_info()
-            result = {
-                'score': -0.001,
-                'num_params': -1,
-                'num_trainable_params': -1,
-                'error_type': str(syserror[0]),
-                'error_message': str(syserror[1]),
-                'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))
-            }
-        scores.append(result['score']/float(exploration_configuration['additional_info'][dataset]))
-        result_compilation.update({f'{dataset}-{key}': result[key] for key in result})
-    result_compilation['score'] = sum(scores)/len(scores) # MEAN
-    session.report(result_compilation)
+    except Exception as e:
+        print('EXCEPTION FOUND\n', e)
+        syserror = sys.exc_info()
+        result = {
+            'score': -0.001,
+            'num_params': -1,
+            'num_trainable_params': -1,
+            'error_type': str(syserror[0]),
+            'error_message': str(syserror[1]),
+            'error_traceback': '\n'.join(traceback.format_tb(e.__traceback__))
+        }
+    #     scores.append(result['score']/float(exploration_configuration['additional_info'][dataset]))
+    #     result_compilation.update({f'{dataset}-{key}': result[key] for key in result})
+    # result_compilation['score'] = sum(scores)/len(scores) # MEAN
+    session.report(result)
         
          

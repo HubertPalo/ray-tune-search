@@ -35,6 +35,39 @@ def get_dataset_locations(data_fullpath: Path, dataset_locations_fullpath: Path)
     return base_locations
 
 
+def process_report(report, metrics=["accuracy", "f1 score (macro)", "f1 score (weighted)"]):
+    report_dict = dict()
+    report_dict['estimator'] = report['estimator']['name']
+    for metric in metrics:
+        all_runs = [r['result'][metric] for r in report["results"]["runs"]]
+        report_dict[f"{metric} (mean)"] = np.mean(all_runs)
+        report_dict[f"{metric} (std)"] = np.std(all_runs)
+    return report_dict
+
+def process_result_default(result):
+    to_report = dict()
+    estimator_results = [process_report(report) for report in result['report']]
+    max_report = {
+        'max': np.max([result["accuracy (mean)"] for result in estimator_results])
+    }
+    # max_accuracy = np.max([result["accuracy (mean)"] for result in estimator_results])
+    for estimator_result in estimator_results:
+        estimator_name = estimator_result['estimator']
+        for key in estimator_result.keys():
+            to_report[f"{estimator_name}-{key}"] = estimator_result[key]
+    
+    return max_report, to_report
+
+def process_result_custom(result):
+    to_report = dict()
+    max_report = dict()
+    for dataset_name in result['report'].keys():
+        m_report, d_report = process_result_default(result['report'][dataset_name])
+        for key in d_report.keys():
+            to_report[f"{dataset_name}-{key}"] = d_report[key]
+        max_report[dataset_name] = m_report['max']
+    return max_report, to_report
+
 def process_result(result):
     """
     Process the result of a single experiment run.
