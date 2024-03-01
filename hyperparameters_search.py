@@ -194,8 +194,8 @@ def hyperparameters_search(
             for k in keys:
                 search_space[k] = tune.choice([0,1])
             continue
-        elif search_space_unit.tune_function == 'choice':
-            search_space[search_space_unit.identifier] = tune.choice(*[search_space_unit.tune_parameters])
+        # elif search_space_unit.tune_function == 'choice':
+        #     search_space[search_space_unit.identifier] = tune.choice(*[search_space_unit.tune_parameters])
         else:
             search_space[search_space_unit.identifier] = getattr(tune, search_space_unit.tune_function)(*search_space_unit.tune_parameters)
     # search_space = {

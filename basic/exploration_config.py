@@ -11,7 +11,7 @@ class ResourceConfig:
 class SearchSpaceUnit:
     identifier: str
     tune_function: str
-    tune_parameters: List[any]
+    tune_parameters: list[any]
     route: str
     extra_features: Optional[List] = None
 
