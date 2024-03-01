@@ -28,8 +28,8 @@ def main(args):
 
     for folder in folders_to_check:
         print(f"Looking for files inside path {folder}...")
-        exploration_config_path = Path(f"{folder}/exploration_config.yaml")
-        base_config_path = Path(f"{folder}/base_config.yaml")
+        exploration_config_path = Path.absolute(Path(f"{folder}/exploration_config.yaml"))
+        base_config_path = Path.absolute(Path(f"{folder}/base_config.yaml"))
         try:
             print(f"Trying to read file {exploration_config_path}...")
             # Read the hyperparameters search config file
