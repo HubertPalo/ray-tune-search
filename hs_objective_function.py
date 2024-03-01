@@ -34,6 +34,9 @@ def default_objective_function(
             if property_content == []:
                 #  property_content = search_space[key]['tune_parameters']
                 property_content = search_space_unit.tune_parameters
+            # Set the list to only kuhar and motionsense - TO REMOVE LATER
+            property_content = ['kuhar.standartized_balanced[train]', 'motionsense.standartized_balanced[train]'] # TO REMOVE LATER
+                
         # Prepare the route
         # route = search_space[key]['route'].split('/')
         route = search_space_unit.route.split('/')
