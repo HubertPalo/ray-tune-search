@@ -47,6 +47,7 @@ def main(args):
     if exploration_config is None or base_config is None:
         raise ValueError(f"No experiment files found. Exiting...")
     
+    print(exploration_config)
     exploration_config = from_dict(
         data_class=ExplorationConfig,
         data=exploration_config
