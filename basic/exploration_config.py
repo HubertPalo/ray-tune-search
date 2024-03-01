@@ -9,7 +9,7 @@ class ResourceConfig:
 
 @dataclass
 class SearchSpaceUnit:
-    # identifier: str
+    identifier: str
     tune_function: str
     tune_parameters: Union[List, dict]
     route: str
@@ -18,6 +18,6 @@ class SearchSpaceUnit:
 @dataclass
 class ExplorationConfig:
     resources: ResourceConfig
-    search_space: dict[str, SearchSpaceUnit]
+    search_space: List[SearchSpaceUnit]
     initial_params: Optional[dict] = None
     additional_info: Optional[List] = None

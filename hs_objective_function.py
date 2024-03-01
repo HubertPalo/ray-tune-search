@@ -6,29 +6,34 @@ from dacite import from_dict
 
 from basic.config import ExecutionConfig
 from h_search_unit import h_search_unit
-
+from basic.exploration_config import ExplorationConfig
 
 def default_objective_function(
     config,
     save_folder,
     dataset_locations,
     basic_experiment_configuration=None,
-    exploration_configuration=None,
+    exploration_configuration:ExplorationConfig=None,
     additional_info={}):
     basic_experiment_config = deepcopy(basic_experiment_configuration)
     # Update the values for the current experiment
     search_space = exploration_configuration['search_space']
-    for key in search_space:
-        property_content = config[key] if key in config else []
-        if search_space[key]['tune_function'] == 'multichoice':
+    # for key in search_space:
+    for search_space_unit in exploration_configuration.search_space:
+        # property_content = config[key] if key in config else []
+        property_content = config[search_space_unit.identifier] if search_space_unit.identifier in config else []
+        # if search_space[key]['tune_function'] == 'multichoice':
+        if search_space_unit.tune_function == 'multichoice':
             # Get the values
             property_content = []
-            for parameter in search_space[key]['tune_parameters']:
-                multichoice_key = f"MC-{key}-{parameter}"
+            # for parameter in search_space[key]['tune_parameters']:
+            for parameter in search_space_unit.tune_parameters:
+                multichoice_key = f"MC-{search_space_unit.identifier}-{parameter}"
                 if config[multichoice_key] == 1:
                     property_content.append(parameter)
             if property_content == []:
-                 property_content = search_space[key]['tune_parameters']
+                #  property_content = search_space[key]['tune_parameters']
+                property_content = search_space_unit.tune_parameters
         # Prepare the route
         route = search_space[key]['route'].split('/')
         property_to_modify = basic_experiment_config

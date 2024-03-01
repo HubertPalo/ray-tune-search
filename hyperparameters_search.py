@@ -185,15 +185,17 @@ def hyperparameters_search(
     # Get the search space, initial params and experiment name from the config file
     search_space = {}
     # multichoice_info = []
-    for key, value in exploration_config.search_space.items():
-        if value['tune_function'] == 'multichoice':
+    # for key, value in exploration_config.search_space.items():
+    for search_space_unit in exploration_config.search_space:
+        # if value['tune_function'] == 'multichoice':
+        if search_space_unit.tune_function == 'multichoice':
             # multichoice_info.append((key, value))
-            keys = [f"MC-{key}-{i}" for i in value['tune_parameters']]
+            keys = [f"MC-{search_space_unit.identifier}-{i}" for i in search_space_unit.tune_parameters]
             for k in keys:
                 search_space[k] = tune.choice([0,1])
             continue
         else:
-            search_space[key] = getattr(tune, value['tune_function'])(*value['tune_parameters'])
+            search_space[search_space_unit.identifier] = getattr(tune, search_space_unit.tune_function)(*search_space_unit.tune_parameters)
     # search_space = {
     #     key: getattr(tune, value['tune_function'])(*value['tune_parameters'])
     #     for key, value in exploration_config["search_space"].items()
