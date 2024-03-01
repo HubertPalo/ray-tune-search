@@ -204,7 +204,7 @@ def hyperparameters_search(
     # }
     initial_params = exploration_config.initial_params
     
-    resources = exploration_config.resources
+    resources = {'cpu':exploration_config.resources.cpu, 'gpu':exploration_config.resources.gpu}
     
     # Create the experiments folder
     save_folder = None
