@@ -17,7 +17,7 @@ def default_objective_function(
     additional_info={}):
     basic_experiment_config = deepcopy(basic_experiment_configuration)
     # Update the values for the current experiment
-    search_space = exploration_configuration['search_space']
+    # search_space = exploration_configuration['search_space']
     # for key in search_space:
     for search_space_unit in exploration_configuration.search_space:
         # property_content = config[key] if key in config else []
@@ -35,7 +35,8 @@ def default_objective_function(
                 #  property_content = search_space[key]['tune_parameters']
                 property_content = search_space_unit.tune_parameters
         # Prepare the route
-        route = search_space[key]['route'].split('/')
+        # route = search_space[key]['route'].split('/')
+        route = search_space_unit.route.split('/')
         property_to_modify = basic_experiment_config
         for key, item in enumerate(route[:-1]):
             # If item is a number, then it is a list
