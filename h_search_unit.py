@@ -75,7 +75,7 @@ def h_search_unit(
     # General Report
     result_object.update(report)
     # Topology Report
-    topology_result = experiment_result['additional']['pydrm_report'] if 'pydrm_report' in experiment_result['additional'] else None
+    topology_result = experiment_result['additional']['pydrm_report'] if 'pydrm_report' in experiment_result['additional'] else {}
     result_object.update(topology_result)
     # Reducer size Report
     reducer_size = {
