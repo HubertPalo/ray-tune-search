@@ -31,9 +31,11 @@ def main(args):
         exploration_config_path = Path(f"{folder}/exploration_config.yaml")
         base_config_path = Path(f"{folder}/base_config.yaml")
         try:
+            print(f"Trying to read file {exploration_config_path}...")
             # Read the hyperparameters search config file
             with open(exploration_config_path, "r") as f:
                 exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+            print(f"Trying to read file {base_config_path}...")
             with open(base_config_path, "r") as f:
                 base_config = yaml.load(f, Loader=yaml.FullLoader)
             print(f"Files inside path {folder} found.")
