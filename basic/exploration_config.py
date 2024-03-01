@@ -13,7 +13,7 @@ class SearchSpaceUnit:
     tune_function: str
     tune_parameters: Union[List, dict]
     route: str
-    extra_features: Optional[List] = []
+    extra_features: Optional[List] = None
 
 @dataclass
 class ExplorationConfig:
