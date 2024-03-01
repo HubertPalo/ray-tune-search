@@ -20,4 +20,4 @@ class ExplorationConfig:
     resources: ResourceConfig
     search_space: List[SearchSpaceUnit]
     initial_params: Optional[dict] = None
-    additional_info: Optional[list] = None
+    additional_info: Optional[dict] = None
