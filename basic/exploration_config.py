@@ -1,0 +1,23 @@
+# Python imports
+from dataclasses import dataclass
+from typing import List, Optional, Union
+
+@dataclass
+class ResourceConfig:
+    gpu: float = 1
+    cpu: float = 1
+
+@dataclass
+class SearchSpaceUnit:
+    # identifier: str
+    tune_function: str
+    tune_parameters: Union[List, dict]
+    route: str
+    extra_features: Optional[List] = []
+
+@dataclass
+class ExplorationConfig:
+    resources: ResourceConfig
+    search_space: dict[str, SearchSpaceUnit]
+    initial_params: Optional[dict] = None
+    additional_info: Optional[List] = None

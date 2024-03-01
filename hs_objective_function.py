@@ -26,7 +26,9 @@ def default_objective_function(
             for parameter in search_space[key]['tune_parameters']:
                 multichoice_key = f"MC-{key}-{parameter}"
                 if config[multichoice_key] == 1:
-                    property_content.append(parameter) 
+                    property_content.append(parameter)
+            if property_content == []:
+                 property_content = search_space[key]['tune_parameters']
         # Prepare the route
         route = search_space[key]['route'].split('/')
         property_to_modify = basic_experiment_config
@@ -97,7 +99,7 @@ def new_objective_function(
     config_to_execute = from_dict(
         data_class=ExecutionConfig,
         data=basic_experiment_config
-    )    
+    )
     try:
         result = h_search_unit(
             save_folder=save_folder,

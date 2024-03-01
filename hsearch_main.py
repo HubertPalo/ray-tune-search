@@ -4,7 +4,8 @@ from basic.helper import get_dataset_locations
 from pathlib import Path
 import yaml
 import os
-
+from dacite import from_dict
+from basic.exploration_config import ExplorationConfig
 
 # Main function
 def main(args):
@@ -46,17 +47,24 @@ def main(args):
     if exploration_config is None or base_config is None:
         raise ValueError(f"No experiment files found. Exiting...")
     
+    exploration_config = from_dict(
+        data_class=ExplorationConfig,
+        data=exploration_config
+    )
+    
     time_budget = args.time_budget if args.time_budget != -1 else None
     # time_budget = args.time_budget
     # if time_budget == -1:
     #     time_budget = None
     
-    cpu = args.cpu
-    if cpu != -1:
-        exploration_config['resources']['cpu'] = cpu
-    gpu = args.gpu
-    if gpu != -1:
-        exploration_config['resources']['gpu'] = gpu
+    exploration_config.resources.cpu = args.cpu if args.cpu != -1 else exploration_config.resources.cpu
+    exploration_config.resources.gpu = args.gpu if args.gpu != -1 else exploration_config.resources.gpu
+    # cpu = args.cpu
+    # if cpu != -1:
+    #     exploration_config.resources.cpu = cpu
+    # gpu = args.gpu
+    # if gpu != -1:
+    #     exploration_config.resources.gpu = gpu
     
     # ESTABLECER EL CODIGO PARA EL TIPO DE STOPPER
     # DETECTAR TIPO DE STOPPER Y MANDAR

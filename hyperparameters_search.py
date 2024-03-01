@@ -19,6 +19,8 @@ import pandas as pd
 from pathlib import Path
 import functools
 from hs_objective_function import default_objective_function, new_objective_function
+from basic.exploration_config import ExplorationConfig
+
 
 class BestResultCallback(Callback):
 
@@ -173,7 +175,7 @@ class CustomStopper(Stopper):
 def hyperparameters_search(
         dataset_locations=None,
         base_config=None,
-        exploration_config=None,
+        exploration_config:ExplorationConfig=None,
         experiment_full_path=None,
         experiment_info=None):
     # Set the random state
@@ -183,7 +185,7 @@ def hyperparameters_search(
     # Get the search space, initial params and experiment name from the config file
     search_space = {}
     # multichoice_info = []
-    for key, value in exploration_config["search_space"].items():
+    for key, value in exploration_config.search_space.items():
         if value['tune_function'] == 'multichoice':
             # multichoice_info.append((key, value))
             keys = [f"MC-{key}-{i}" for i in value['tune_parameters']]
@@ -196,9 +198,9 @@ def hyperparameters_search(
     #     key: getattr(tune, value['tune_function'])(*value['tune_parameters'])
     #     for key, value in exploration_config["search_space"].items()
     # }
-    initial_params = exploration_config["initial_params"]
+    initial_params = exploration_config.initial_params
     
-    resources = exploration_config["resources"]
+    resources = exploration_config.resources
     
     # Create the experiments folder
     save_folder = None
@@ -225,7 +227,10 @@ def hyperparameters_search(
 
     baseline_gain = experiment_info['baseline_gain']
     additional_info = {'BASELINE-GAIN': baseline_gain}
-    additional_info.update(exploration_config['additional_info'] if 'additional_info' in exploration_config else {})
+    print(f"Baseline gain: {baseline_gain}")
+    print(f"Additional info: {exploration_config.additional_info}")
+    additional_info.update(exploration_config.additional_info)
+
     
     # Setting the parameters for the function
     trainable = tune.with_parameters(
