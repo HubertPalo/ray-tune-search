@@ -80,7 +80,7 @@ class ExtraConfig:
 
 @dataclass
 class MetaConfig:
-    experiment_type: str = "default" # "test_isolated"
+    experiment_type: str = "default" # "tests_isolated"
     # baseline_comparison: bool = False # If True, compare the results with the baseline
     # baseline_improvement_rule: str = "mean" # valid values: mean, min, max
 

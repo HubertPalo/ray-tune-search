@@ -135,11 +135,11 @@ def run_custom_experiment(
 
     # Add some meta information
     additional_info["load_time"] = float(loading_time)
-    additional_info["train_size"] = len(datasets["train_dataset"])
+    additional_info["train_size"] = len(datasets["train_dataset"]) if "train_dataset" in datasets else 0
     additional_info["validation_size"] = (
         len(datasets["validation_dataset"]) if "validation_dataset" in datasets else 0
     )
-    additional_info["test_size"] = len(datasets["test_dataset"])
+    additional_info["test_size"] = len(datasets["test_dataset"]) if "test_dataset" in datasets else 0
     additional_info["reduce_size"] = (
         len(datasets["reducer_dataset"]) if "reducer_dataset" in datasets else 0
     )
@@ -158,7 +158,7 @@ def run_custom_experiment(
     additional_info["transform_time"] = float(transform_time)
 
     # ----------- EXTRA - Save the original data representation ------------
-    original_test_representation = deepcopy(datasets["test_dataset"])
+    original_test_representation = deepcopy(datasets["test_dataset"]) if "test_dataset" in datasets else None
     
     # ----------- 3. Do the parametric transform on train and test, using the reducer dataset to fit the transform ------------
 
