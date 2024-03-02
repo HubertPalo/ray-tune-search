@@ -56,27 +56,31 @@ def main(args):
             print(f"Skipping {file}")
             continue
         print(f"Executing {file}")
-        # Read the config file
-        with open(f"{experiments_path}/{file}", "r") as f:
-            experiment_config = yaml.load(f, Loader=yaml.FullLoader)
-        # Execute the experiment
-        result = execute_once(
-            dataset_locations=dataset_locations,
-            save_folder=Path.absolute(Path(f'execute_once_experiments/{args.experiment}/results')),
-            experiment_configuration=experiment_config,
-            specific_name=file[:-5]
-        )
-        # Convert the score to float
-        result['score'] = float(result['score'])
-        for key in result.keys():
-            try:
-                result[key] = float(result[key])
-            except Exception as error:
-                print(f"Error converting {key} to float")
-                print(error) 
-        # Save the score in a file
-        with open(f"execute_once_experiments/{args.experiment}/scores/{file}", "w") as f:
-            yaml.dump(result, f)
+        try:
+            # Read the config file
+            with open(f"{experiments_path}/{file}", "r") as f:
+                experiment_config = yaml.load(f, Loader=yaml.FullLoader)
+            # Execute the experiment
+            result = execute_once(
+                dataset_locations=dataset_locations,
+                save_folder=Path.absolute(Path(f'execute_once_experiments/{args.experiment}/results')),
+                experiment_configuration=experiment_config,
+                specific_name=file[:-5]
+            )
+            # Convert the score to float
+            result['score'] = float(result['score'])
+            for key in result.keys():
+                try:
+                    result[key] = float(result[key])
+                except Exception as error:
+                    print(f"Error converting {key} to float")
+                    print(error) 
+            # Save the score in a file
+            with open(f"execute_once_experiments/{args.experiment}/scores/{file}", "w") as f:
+                yaml.dump(result, f)
+        except Exception as e:
+            print('EXCEPTION FOUND\n', e)
+            
 
 # Execute main function
 if __name__=="__main__":
