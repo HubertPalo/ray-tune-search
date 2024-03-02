@@ -55,6 +55,7 @@ def main(args):
         if file in result_file_list and args.skip_existing:
             print(f"Skipping {file}")
             continue
+        print(f"Executing {file}")
         # Read the config file
         with open(f"{experiments_path}/{file}", "r") as f:
             experiment_config = yaml.load(f, Loader=yaml.FullLoader)
