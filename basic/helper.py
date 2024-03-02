@@ -52,7 +52,7 @@ def process_result_default(report_result):
     }
     # max_accuracy = np.max([result["accuracy (mean)"] for result in estimator_results])
     for estimator_result in estimator_results:
-        estimator_name = estimator_result['estimator']
+        estimator_name = estimator_result.pop('estimator')
         for key in estimator_result.keys():
             to_report[f"{estimator_name}-{key}"] = estimator_result[key]
     
