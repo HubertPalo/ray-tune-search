@@ -60,6 +60,9 @@ def main(args):
             # Read the config file
             with open(f"{experiments_path}/{file}", "r") as f:
                 experiment_config = yaml.load(f, Loader=yaml.FullLoader)
+            if 'metadata' not in experiment_config:
+                experiment_config['metadata'] = {'experiment_type': 'default'}
+            
             # Execute the experiment
             result = execute_once(
                 dataset_locations=dataset_locations,
