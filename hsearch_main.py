@@ -6,6 +6,8 @@ import yaml
 import os
 from dacite import from_dict
 from basic.exploration_config import ExplorationConfig
+import traceback
+
 
 # Main function
 def main(args):
@@ -41,8 +43,8 @@ def main(args):
             print(f"Files inside path {folder} found.")
             experiment_full_path = Path.absolute(Path(f"{folder}"))
             break
-        except Exception as e:
-            print(e.with_traceback())
+        except Exception:
+            print(traceback.format_exc())
             exploration_config = None
             base_config = None
             print(f"Files inside path {args.experiment} not found...")
