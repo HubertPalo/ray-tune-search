@@ -41,7 +41,8 @@ def main(args):
             print(f"Files inside path {folder} found.")
             experiment_full_path = Path.absolute(Path(f"{folder}"))
             break
-        except:
+        except Exception as e:
+            print(e.with_traceback())
             exploration_config = None
             base_config = None
             print(f"Files inside path {args.experiment} not found...")
