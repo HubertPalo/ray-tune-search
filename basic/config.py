@@ -6,6 +6,7 @@ from typing import List, Optional, Union
 from librep.base.transform import Transform
 from librep.base.estimator import Estimator
 from librep.estimators import SVC, KNeighborsClassifier, RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from librep.transforms.fft import FFT
 from librep.transforms.reshaper import SimpleReshaper
 from librep.transforms.spectrogram import Spectrogram
@@ -167,6 +168,7 @@ estimator_cls = {
     "RandomForest": RandomForestClassifier,
     "DebugEstimator": DebugTransformEstimator,
     "WrapperEstimator": WrapperEstimatorTransform,
+    "MLP": MLPClassifier,
 }
 
 # Dictionary with the valid reducer keys to use in experiment configuration
