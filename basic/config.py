@@ -88,7 +88,7 @@ class MetaConfig:
 @dataclass
 class ExecutionConfig:
     # Meta information
-    metadata: MetaConfig
+    metadata: Optional[MetaConfig]
     # control variables
     version: str
     # Datasets to use
