@@ -26,6 +26,7 @@ def do_reduce(
     sensor_names: List[str] = ("accel", "gyro"),
     report_reducer_weight: bool = False,
     model_with_weights: List[str] = ['convtae1d'],
+    force_when_no_reducer: bool = False,
 ) -> Dict[str, MultiModalDataset]:
     """Utilitary function to perform dimensionality reduce to a list of
     datasets. The first dataset will be used to fit the reducer. And the
@@ -68,6 +69,11 @@ def do_reduce(
 
     # The reducer_dataset_name must be in the datasets
     if reducer_dataset_name not in datasets:
+        # if force_when_no_reducer:
+        #     copy_of_first_dataset = datasets[list(datasets.keys())[0]]
+
+        #     datasets[reducer_dataset_name] = datasets[list(datasets.keys())[0]]
+        #     return datasets
         raise ValueError(
             f"Dataset '{reducer_dataset_name}' not found. "
             + f"Maybe you forgot to load it in your configuration file? "
