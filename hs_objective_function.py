@@ -52,6 +52,11 @@ def default_objective_function(
         data_class=ExecutionConfig,
         data=basic_experiment_config
     )
+    if config_to_execute.metadata is None:
+        config_to_execute.metadata = from_dict(
+            data_class=ExecutionConfig.metadata,
+            data={'experiment_type': 'default'}
+        ) 
     try:
         result = h_search_unit(
             save_folder=save_folder,

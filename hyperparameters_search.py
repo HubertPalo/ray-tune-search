@@ -233,6 +233,7 @@ def hyperparameters_search(
     additional_info = {'BASELINE-GAIN': baseline_gain}
     print(f"Baseline gain: {baseline_gain}")
     print(f"Additional info: {exploration_config.additional_info}")
+    
     if exploration_config.additional_info:
         additional_info.update(exploration_config.additional_info)
 

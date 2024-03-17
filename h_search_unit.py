@@ -52,8 +52,8 @@ def h_search_unit(
     # Get the experiment function
     # experiment_function = experiment_functions[experiment_type]
     # Get the process function
-    print(config_to_execute, '\n', config_to_execute.metadata,'\n', config_to_execute.metadata.experiment_type)
-    process_function = process_functions[config_to_execute.metadata.experiment_type if config_to_execute.metadata is not None else 'default']
+    
+    process_function = process_functions[config_to_execute.metadata.experiment_type]
     # Run the experiment
     experiment_result = run_experiment(
         dataset_locations=dataset_locations,
