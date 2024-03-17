@@ -4,7 +4,7 @@ import sys
 import traceback
 from dacite import from_dict
 
-from basic.config import ExecutionConfig
+from basic.config import ExecutionConfig, MetaConfig
 from h_search_unit import h_search_unit
 from basic.exploration_config import ExplorationConfig
 
@@ -54,7 +54,7 @@ def default_objective_function(
     )
     if config_to_execute.metadata is None:
         config_to_execute.metadata = from_dict(
-            data_class=ExecutionConfig.metadata,
+            data_class=MetaConfig,
             data={'experiment_type': 'default'}
         ) 
     try:
