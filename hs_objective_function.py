@@ -32,8 +32,16 @@ def default_objective_function(
                 if config[multichoice_key] == 1:
                     property_content.append(parameter)
             if property_content == []:
+                session.report(result = {
+                    'score': None,
+                    'num_params': -1,
+                    'num_trainable_params': -1,
+                    'error_type': '0 reducer',
+                    'error_message': 'There is no reducer in the configuration.',
+                    'error_traceback': 'There is no reducer in the configuration.'
+                })
                 #  property_content = search_space[key]['tune_parameters']
-                property_content = search_space_unit.tune_parameters
+                # property_content = search_space_unit.tune_parameters
             # # Set the list to only kuhar and motionsense - TO REMOVE LATER
             # property_content = ['kuhar.standartized_balanced[train]', 'motionsense.standartized_balanced[train]'] # TO REMOVE LATER
                 
