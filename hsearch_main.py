@@ -35,9 +35,9 @@ def main(args):
     experiment_full_path = Path.absolute(Path(f"{path}"))
     base_config = None
     exploration_config = None
-    with open(experiment_full_path /  f"{path}/base_config.yaml", "r") as f:
+    with open(experiment_full_path /  f"base_config.yaml", "r") as f:
         base_config = yaml.load(f, Loader=yaml.FullLoader)
-    with open(experiment_full_path /  f"{path}/exploration_config.yaml", "r") as f:
+    with open(experiment_full_path /  f"exploration_config.yaml", "r") as f:
         exploration_config = yaml.load(f, Loader=yaml.FullLoader)
     
 
