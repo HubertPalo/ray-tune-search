@@ -23,31 +23,64 @@ def main(args):
         dataset_locations_fullpath=dataset_locations_fullpath
     )
 
-    folders_to_check = [
-        Path(f"{args.experiment}"),
-        Path(f"experiments/{args.experiment}")
-    ]
 
-    for folder in folders_to_check:
-        print(f"Looking for files inside path {folder}...")
-        exploration_config_path = Path.absolute(Path(f"{folder}/exploration_config.yaml"))
-        base_config_path = Path.absolute(Path(f"{folder}/base_config.yaml"))
-        try:
-            print(f"Trying to read file {exploration_config_path}...")
-            # Read the hyperparameters search config file
-            with open(exploration_config_path, "r") as f:
-                exploration_config = yaml.load(f, Loader=yaml.FullLoader)
-            print(f"Trying to read file {base_config_path}...")
-            with open(base_config_path, "r") as f:
-                base_config = yaml.load(f, Loader=yaml.FullLoader)
-            print(f"Files inside path {folder} found.")
-            experiment_full_path = Path.absolute(Path(f"{folder}"))
-            break
-        except Exception:
-            print(traceback.format_exc())
-            exploration_config = None
-            base_config = None
-            print(f"Files inside path {args.experiment} not found...")
+    if args.external:
+        path = Path(f"{args.experiment}")
+    else:
+        path = Path(f"experiments/{args.experiment}")
+    
+    if not os.path.exists(path):
+        raise ValueError(f"Experiment path {path} does not exist")
+    
+    experiment_full_path = Path.absolute(Path(f"{path}"))
+    base_config = None
+    exploration_config = None
+    with open(experiment_full_path /  f"{path}/base_config.yaml", "r") as f:
+        base_config = yaml.load(f, Loader=yaml.FullLoader)
+    with open(experiment_full_path /  f"{path}/exploration_config.yaml", "r") as f:
+        exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+    
+
+
+    # folders_to_check = [
+    #     Path(f"{args.experiment}"),
+    #     Path(f"experiments/{args.experiment}")
+    # ]
+    # if args.is_folder:
+    #     for folder in os.listdir(args.experiment):
+    #         try:
+    #             with open(f"{args.experiment}/{folder}/exploration_config.yaml", "r") as f:
+    #                 exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+    #             with open(f"{args.experiment}/{folder}/base_config.yaml", "r") as f:
+    #                 base_config = yaml.load(f, Loader=yaml.FullLoader)
+    #             experiment_full_path = Path.absolute(Path(f"{args.experiment}/{folder}"))
+    #             break
+    #         except Exception:
+    #             exploration_config = None
+    #             base_config = None
+    #             print(f"Files inside path {args.experiment}/{folder} not found...")
+    
+
+    # for folder in folders_to_check:
+    #     print(f"Looking for files inside path {folder}...")
+    #     exploration_config_path = Path.absolute(Path(f"{folder}/exploration_config.yaml"))
+    #     base_config_path = Path.absolute(Path(f"{folder}/base_config.yaml"))
+    #     try:
+    #         print(f"Trying to read file {exploration_config_path}...")
+    #         # Read the hyperparameters search config file
+    #         with open(exploration_config_path, "r") as f:
+    #             exploration_config = yaml.load(f, Loader=yaml.FullLoader)
+    #         print(f"Trying to read file {base_config_path}...")
+    #         with open(base_config_path, "r") as f:
+    #             base_config = yaml.load(f, Loader=yaml.FullLoader)
+    #         print(f"Files inside path {folder} found.")
+    #         experiment_full_path = Path.absolute(Path(f"{folder}"))
+    #         break
+    #     except Exception:
+    #         print(traceback.format_exc())
+    #         exploration_config = None
+    #         base_config = None
+    #         print(f"Files inside path {args.experiment} not found...")
 
     if exploration_config is None or base_config is None:
         raise ValueError(f"No experiment files found. Exiting...")
@@ -180,8 +213,13 @@ if __name__=="__main__":
         type=str,
         required=False,
     )
+    parser.add_argument(
+        "--external",
+        help="External folder for the experiment files",
+        action="store_true",
+    )
     # parser.add_argument(
-    #     "--experiment_name",
+    #     "--is_folder",
     #     default="Test_experiment",
     #     help="Experiment name",
     #     type=str,
