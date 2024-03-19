@@ -32,7 +32,7 @@ def default_objective_function(
                 if config[multichoice_key] == 1:
                     property_content.append(parameter)
             if property_content == []:
-                session.report(result = {
+                session.report({
                     'score': None,
                     'num_params': -1,
                     'num_trainable_params': -1,
