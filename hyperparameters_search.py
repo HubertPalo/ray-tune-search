@@ -68,7 +68,7 @@ class CustomStopper(Stopper):
         print(f"CUSTOM STOPPER - Trial ids length: {len(self.trial_ids)} counter: {self.counter}")
         # if self.experiment_full_path != '':
             # print(f"CUSTOM STOPPER - Saving results to {self.experiment_full_path}...")
-        if self._metric is not None and trial_id not in self.trial_ids and result[self._metric] > 0:
+        if result[self._metric] is not None and trial_id not in self.trial_ids and result[self._metric] > 0:
             self.trial_ids.append(trial_id)
             self._iterations += 1
             # self.results.append(result[self._metric])
