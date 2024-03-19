@@ -77,6 +77,7 @@ class ExtraConfig:
     save_reducer: bool = False
     report_reducer_weight: bool = False
     report_pydrmetrics: bool = False
+    freeze_reducer: bool = True
     # experiment_type: str = "default"
 
 @dataclass

@@ -7,6 +7,7 @@ from dacite import from_dict
 from basic.config import ExecutionConfig, MetaConfig
 from h_search_unit import h_search_unit
 from basic.exploration_config import ExplorationConfig
+import numpy as np
 
 def default_objective_function(
     config,
@@ -33,7 +34,7 @@ def default_objective_function(
                     property_content.append(parameter)
             if property_content == []:
                 session.report({
-                    'score': None,
+                    'score': float('-inf'),
                     'num_params': -1,
                     'num_trainable_params': -1,
                     'error_type': '0 reducer',
