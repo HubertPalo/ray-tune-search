@@ -1,0 +1,64 @@
+additional_info:
+  BASELINES:
+    kuhar: 0.67
+    motionsense: 0.79
+    uci: 0.85
+    wisdm: 0.75
+    realworld_thigh: 0.67
+    realworld_waist: 0.79
+resources:
+  gpu: 0.25
+  cpu: 1.0
+search_space:
+# Batch size
+# - identifier: batch_size
+#   tune_function: choice
+#   tune_parameters: [[64, 128]]
+#   route: reducer/kwargs/batch_size
+# Latent dimensionality
+- identifier: enc_size
+  tune_function: randint
+  tune_parameters: [2, 91]
+  route: reducer/kwargs/ae_encoding_size
+# Topology
+# - identifier: ae_topo_lambda
+#   tune_function: uniform
+#   tune_parameters: [0, 3]
+#   route: reducer/kwargs/ae_topo_lambda
+# Conv
+- identifier: ae_conv_num
+  tune_function: randint
+  tune_parameters: [1, 4]
+  route: reducer/kwargs/ae_conv_num
+- identifier: ae_conv_kernel
+  tune_function: randint
+  tune_parameters: [2, 5]
+  route: reducer/kwargs/ae_conv_kernel
+- identifier: ae_conv_stride
+  tune_function: randint
+  tune_parameters: [1, 3]
+  route: reducer/kwargs/ae_conv_stride
+- identifier: ae_conv_padding
+  tune_function: randint
+  tune_parameters: [0, 2]
+  route: reducer/kwargs/ae_conv_padding
+- identifier: ae_dropout
+  tune_function: uniform
+  tune_parameters: [0.1, 0.5]
+  route: reducer/kwargs/ae_dropout
+# FC
+- identifier: ae_fc_num
+  tune_function: randint
+  tune_parameters: [0, 4]
+  route: reducer/kwargs/ae_fc_num
+- identifier: red_dataset
+  tune_function: multichoice
+  tune_parameters:
+  - kuhar.standartized_balanced[train]
+  - motionsense.standartized_balanced[train]
+  - uci.standartized_balanced[train]
+  - wisdm.standartized_balanced[train]
+  - realworld_thigh.standartized_balanced[train]
+  - realworld_waist.standartized_balanced[train]
+  route: reducer_dataset
+initial_params:
