@@ -22,6 +22,7 @@ def filter_1_conv_result_over_limit(config, max=2000):
     
     if input_size > max:
         return True
+    return False
 
 def default_objective_function(
     config,
