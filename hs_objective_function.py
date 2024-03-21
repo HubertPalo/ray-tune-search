@@ -9,6 +9,20 @@ from h_search_unit import h_search_unit
 from basic.exploration_config import ExplorationConfig
 import numpy as np
 
+def filter_1_conv_result_over_limit(config, max=2000):
+    ae_conv_num = config.get('ae_conv_num', 0)
+    ae_conv_kernel = config.get('ae_conv_kernel', 3)
+    ae_conv_stride = config.get('ae_conv_stride', 1)
+    ae_conv_padding = config.get('ae_conv_padding', 0)
+    def l_out(input_size, kernel, stride, padding, dilation=1):
+        return int((input_size + 2*padding - dilation*(kernel-1) - 1)/stride + 1)
+    input_size = 60
+    for i in range(ae_conv_num):
+        input_size = l_out(input_size, ae_conv_kernel, ae_conv_stride, ae_conv_padding)
+    
+    if input_size > max:
+        return True
+
 def default_objective_function(
     config,
     save_folder,
@@ -17,9 +31,17 @@ def default_objective_function(
     exploration_configuration:ExplorationConfig=None,
     additional_info={}):
     basic_experiment_config = deepcopy(basic_experiment_configuration)
-    # Update the values for the current experiment
-    # search_space = exploration_configuration['search_space']
-    # for key in search_space:
+    
+    # Check for the limit
+    if filter_1_conv_result_over_limit(config):
+        session.report({
+            'score': float('-inf'),
+            'num_params': -1,
+            'num_trainable_params': -1,
+            'error_type': 'Structure too big',
+            'error_message': 'The structure is too big.',
+            'error_traceback': 'The structure is too big.'
+        })
     for search_space_unit in exploration_configuration.search_space:
         # property_content = config[key] if key in config else []
         property_content = config[search_space_unit.identifier] if search_space_unit.identifier in config else []
