@@ -34,15 +34,15 @@ def default_objective_function(
     basic_experiment_config = deepcopy(basic_experiment_configuration)
     
     # Check for the limit
-    if filter_1_conv_result_over_limit(config):
-        session.report({
-            'score': float('-inf'),
-            'num_params': -1,
-            'num_trainable_params': -1,
-            'error_type': 'Structure too big',
-            'error_message': 'The structure is too big.',
-            'error_traceback': 'The structure is too big.'
-        })
+    # if filter_1_conv_result_over_limit(config):
+    #     session.report({
+    #         'score': float('-inf'),
+    #         'num_params': -1,
+    #         'num_trainable_params': -1,
+    #         'error_type': 'Structure too big',
+    #         'error_message': 'The structure is too big.',
+    #         'error_traceback': 'The structure is too big.'
+    #     })
     for search_space_unit in exploration_configuration.search_space:
         # property_content = config[key] if key in config else []
         property_content = config[search_space_unit.identifier] if search_space_unit.identifier in config else []
@@ -64,13 +64,7 @@ def default_objective_function(
                     'error_message': 'There is no reducer in the configuration.',
                     'error_traceback': 'There is no reducer in the configuration.'
                 })
-                #  property_content = search_space[key]['tune_parameters']
-                # property_content = search_space_unit.tune_parameters
-            # # Set the list to only kuhar and motionsense - TO REMOVE LATER
-            # property_content = ['kuhar.standartized_balanced[train]', 'motionsense.standartized_balanced[train]'] # TO REMOVE LATER
-                
         # Prepare the route
-        # route = search_space[key]['route'].split('/')
         route = search_space_unit.route.split('/')
         property_to_modify = basic_experiment_config
         for key, item in enumerate(route[:-1]):
@@ -94,7 +88,6 @@ def default_objective_function(
             save_folder=save_folder,
             dataset_locations=dataset_locations,
             config_to_execute=config_to_execute,
-            # experiment_type= exploration_configuration['experiment_type'] if 'experiment_type' in exploration_configuration else 'default',
             additional_info=additional_info
         )
     except Exception as e:
@@ -138,9 +131,6 @@ def new_objective_function(
             property_to_modify = property_to_modify[item]
         # Set the value
         property_to_modify[route[-1]] = property_content
-    # For each dataset
-    # scores = []
-    # result_compilation = {}
     
     config_to_execute = from_dict(
         data_class=ExecutionConfig,

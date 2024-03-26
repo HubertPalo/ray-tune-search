@@ -16,8 +16,15 @@ class SearchSpaceUnit:
     extra_features: Optional[List] = None
 
 @dataclass
+class ValidationConfig:
+    validation_type: str
+    validation_parameters: Optional[dict] = None
+
+@dataclass
 class ExplorationConfig:
     resources: ResourceConfig
     search_space: List[SearchSpaceUnit]
     initial_params: Optional[dict] = None
     additional_info: Optional[dict] = None
+    validation: Optional[ValidationConfig] = None
+
